@@ -10,6 +10,17 @@ Mandatory exercise 1 for Artificial Intelligence for Energy Informatics.
     * Maybe we need to extract different columns from the same table?
 2. Why is there an additional column in the `WindSpeed.csv` dataset that maps any number `x.y` to `x.5`?
 3. What should be take from the big dataset? I.e. the load data?
+4. Where can we find the $\delta_{omc}$ values for the different generation methods?
+    * Maybe they are the $\gamma_{omc}$ in the tables.
+5. Where can we find how to calculate $E_g(t)$ and $E_b(t)$? (For $E_w(t)$ and $E_s(t)$ the formulas are given, are we missing something?)
+
+## Setup
+
+```bash
+conda create --name ai4ei python=3.11
+conda activate ai4ei
+conda install -c conda-forge jupyter numpy pandas seaborn matplotlib
+```
 
 ## Scenario
 
