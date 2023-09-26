@@ -24,7 +24,7 @@ def import_data():
     rate_consumption_charge = np.array(data_rate_consumption_charge.iloc[:, 4])
     # Rate of consumption charge measured by 10^4 $/ MegaWatt = 10 $/kWh
 
-    print(windspeed[0])
+    return solarirradiance, windspeed, rate_consumption_charge
 
 
 def main():
