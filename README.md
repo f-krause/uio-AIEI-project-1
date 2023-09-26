@@ -31,11 +31,12 @@ Mandatory exercise 1 for Artificial Intelligence for Energy Informatics.
 conda create --name ai4ei python=3.11
 conda activate ai4ei
 conda install -c conda-forge jupyter numpy pandas seaborn matplotlib
+pip install gym
 ```
 
 ## Scenario
 
-* **State:** energy price on marketcurrent demand, current energy production capacity (solar/wind)
+* **State:** energy price on market, current demand, current energy production capacity (solar/wind), current battery charge status
 * **Reward:** combination of costs and money obtained by utility grid
     * overall reward: $C(t)=E_u(t)+O_m(t)-S_u(t)$
     * energy purchased from grid $E_u(t)=E(t)\cdot P_g(t)$
