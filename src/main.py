@@ -71,6 +71,7 @@ rated_output_power_generator = 60 / 1000
 sell_back_price = 0.2e-4
 # fixed price
 
+Delta_t = 1
 
 class MicrogridEnv(gym.Env):
     def __init__(self):
@@ -132,14 +133,14 @@ class MicrogridEnv(gym.Env):
 
 class Microgrid(object):
     def __init__(self,
-                 workingstatus=[0, 0, 0],
-                 SOC=0,
+                 workingstatus=[0, 0, 0], # solar PV, wind turbine, generator
+                 SOC=0, # state of charge
                  actions_adjustingstatus=[0, 0, 0],
-                 actions_solar=[0, 0, 0],
-                 actions_wind=[0, 0, 0],
-                 actions_generator=[0, 0, 0],
-                 actions_purchased=[0, 0],
-                 actions_discharged=0,
+                 actions_solar=[0, 0, 0], # the energy load (buy), charging battery (charge), sold back (sell)
+                 actions_wind=[0, 0, 0], # the energy load (buy), charging battery (charge), sold back (sell)
+                 actions_generator=[0, 0, 0], # the energy load (buy), charging battery (charge), sold back (sell)
+                 actions_purchased=[0, 0], # the energy load (buy), charging battery (charge)
+                 actions_discharged=0, # the energy load (buy)
                  solarirradiance=0,
                  windspeed=0):
         self.workingstatus = workingstatus
@@ -237,7 +238,7 @@ class Microgrid(object):
         print("solar irradiance =", self.solarirradiance, file=file)
         print("wind speed =", self.windspeed, file=file)
         print("Microgrid Energy Consumption =", self.EnergyConsumption(), file=file)
-        print("Microgrid Operational Cost =", self.OperationalCost)
+        print("Microgrid Operational Cost =", self.OperationalCost())
 
 
 
