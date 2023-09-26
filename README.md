@@ -4,7 +4,7 @@ Mandatory exercise 1 for Artificial Intelligence for Energy Informatics.
 
 [**Assignment**](https://drive.google.com/file/d/1pIJbfPNUTzSqmtWR1NDfasgdQB9se5Tb/view) | Deadline 17.10.2023 kl 23:59
 
-## To dos
+## To-dos
 
 * Look at datasets (ranges, time ranges)
 * Copy and look at given code snippets, maybe run the code
@@ -27,11 +27,34 @@ Mandatory exercise 1 for Artificial Intelligence for Energy Informatics.
 
 ## Setup
 
+
+## Run module
+```shell
+python ./src/main.py
+```
+
+
+## Environment setup
+
+With conda
 ```bash
 conda create --name ai4ei python=3.11
 conda activate ai4ei
 conda install -c conda-forge jupyter numpy pandas seaborn matplotlib
 pip install gym
+```
+
+With venv
+```shell
+python -m venv venv
+```
+
+```shell
+source venv/bin/activate
+```
+
+```shell
+pip install -r requirements.txt
 ```
 
 ## Scenario
