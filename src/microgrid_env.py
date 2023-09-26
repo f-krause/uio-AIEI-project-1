@@ -4,6 +4,7 @@ from gym import spaces
 from params import *
 from microgrid import Microgrid
 
+
 class MicrogridEnv(gym.Env):
     def __init__(self):
         # Define the action and observation spaces

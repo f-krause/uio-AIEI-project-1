@@ -40,7 +40,8 @@ class Microgrid(object):
             working_status[3 - 1] = 1
         else:
             working_status[3 - 1] = 0
-        soc = self.SOC + (self.actions_solar[2 - 1] + self.actions_wind[2 - 1] + self.actions_generator[2 - 1] + self.actions_purchased[2 - 1]) * charging_discharging_efficiency - self.actions_discharged / charging_discharging_efficiency
+        soc = self.SOC + (self.actions_solar[2 - 1] + self.actions_wind[2 - 1] + self.actions_generator[2 - 1] + \
+                          self.actions_purchased[2 - 1]) * charging_discharging_efficiency - self.actions_discharged / charging_discharging_efficiency
         if soc > SOC_max:
             soc = SOC_max
         if soc < SOC_min:
@@ -52,46 +53,35 @@ class Microgrid(object):
 
     def energy_generated_solar(self):
         if self.working_status[1 - 1] == 1:
-            energy_generated_solar = self.solar_irradiance * area_solarPV * efficiency_solarPV / 1000
+            energy_solar = self.solar_irradiance * area_solarPV * efficiency_solarPV / 1000
         else:
-            energy_generated_solar = 0
-        return energy_generated_solar
+            energy_solar = 0
+        return energy_solar
 
     def energy_generated_wind(self):
         if self.working_status[2 - 1] == 1 and rated_windspeed > self.windspeed >= cutin_windspeed:
-            energy_generated_wind = number_windturbine * rated_power_wind_turbine * (self.windspeed - cutin_windspeed) / (rated_windspeed - cutin_windspeed)
+            energy_wind = number_windturbine * rated_power_wind_turbine * (self.windspeed - cutin_windspeed) / (rated_windspeed - cutin_windspeed)
         else:
             if self.working_status[2 - 1] == 1 and cutoff_windspeed > self.windspeed >= rated_windspeed:
-                energy_generated_wind = number_windturbine * rated_power_wind_turbine * delta_t
+                energy_wind = number_windturbine * rated_power_wind_turbine * delta_t
             else:
-                energy_generated_wind = 0
-        return energy_generated_wind
+                energy_wind = 0
+        return energy_wind
 
     def energy_generated_generator(self):
         if self.working_status[3 - 1] == 1:
-            energy_generated_generator = number_generators * rated_output_power_generator * delta_t
+            energy_generator = number_generators * rated_output_power_generator * delta_t
         else:
-            energy_generated_generator = 0
-        return energy_generated_generator
+            energy_generator = 0
+        return energy_generator
 
     def operational_cost(self):
-        if self.working_status[1 - 1] == 1:
-            energy_generated_solar = self.solar_irradiance * area_solarPV * efficiency_solarPV / 1000
-        else:
-            energy_generated_solar = 0
-        if self.working_status[2 - 1] == 1 and rated_windspeed > self.windspeed >= cutin_windspeed:
-            energy_generated_wind = number_windturbine * rated_power_wind_turbine * (self.windspeed - cutin_windspeed) / (rated_windspeed - cutin_windspeed)
-        else:
-            if self.working_status[2 - 1] == 1 and cutoff_windspeed > self.windspeed >= rated_windspeed:
-                energy_generated_wind = number_windturbine * rated_power_wind_turbine * delta_t
-            else:
-                energy_generated_wind = 0
-        if self.working_status[3 - 1] == 1:
-            energy_generated_generator = number_generators * rated_output_power_generator * delta_t
-        else:
-            energy_generated_generator = 0
-        operational_cost = energy_generated_solar * unit_operational_cost_solar + energy_generated_wind * \
-                           unit_operational_cost_wind + energy_generated_generator * unit_operational_cost_generator
+        energy_solar = self.energy_generated_solar()
+        energy_wind = self.energy_generated_wind()
+        energy_generator = self.energy_generated_generator()
+
+        operational_cost = energy_solar * unit_operational_cost_solar + energy_wind * \
+                           unit_operational_cost_wind + energy_generator * unit_operational_cost_generator
         operational_cost += (self.actions_discharged + self.actions_solar[2 - 1] + self.actions_wind[2 - 1] + \
                              self.actions_generator[2 - 1]) * delta_t * unit_operational_cost_battery / \
                             (2 * capacity_battery_storage * (SOC_max - SOC_min))
@@ -100,7 +90,7 @@ class Microgrid(object):
     def sold_back_reward(self):
         return (self.actions_solar[3 - 1] + self.actions_wind[3 - 1] + self.actions_generator[3 - 1]) * unit_reward_soldbackenergy
 
-    def print_microgrid(self, file):
+    def print_microgrid(self, file=None):
         print("Microgrid working status [solar PV, wind turbine, generator]=", self.working_status, ", SOC =", self.SOC, file=file)
         print("microgrid actions [solar PV, wind turbine, generator]=", self.actions_adjusting_status, file=file)
         print("solar energy supporting [the energy load, charging battery, sold back]=", self.actions_solar, file=file)
@@ -111,4 +101,4 @@ class Microgrid(object):
         print("solar irradiance =", self.solar_irradiance, file=file)
         print("wind speed =", self.windspeed, file=file)
         print("Microgrid Energy Consumption =", self.energy_consumption(), file=file)
-        print("Microgrid Operational Cost =", self.operational_cost)
+        print("Microgrid Operational Cost =", self.operational_cost())
