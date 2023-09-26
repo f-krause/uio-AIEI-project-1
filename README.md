@@ -58,4 +58,5 @@ conda install -c conda-forge jupyter numpy pandas seaborn matplotlib
 * **[pymgrid](https://github.com/Total-RD/pymgrid)** is discontinued, we looked at its successor python-microgrid
 * **[python-microgrid](https://github.com/ahalev/python-microgrid/tree/master)** can be used "to generate and simulate a large number of microgrids"; according to their [data section](https://github.com/ahalev/python-microgrid/tree/master#data), they als use OpenEI load data and PV datasets ("Data in pymgrid are based on TMY3 (data based on representative weather)", this might be EnergyPlus)
 * [**easygrid:**](https://github.com/YannBerthelot/easygrid/tree/main) a simple version based on [OpenAI gym](https://github.com/openai/gym), maybe we should use this to get started
-* **[example tutorial](https://github.com/Wenuka/RL_for_energy_tutorial)**
+* **[example tutorial](https://github.com/Wenuka/RL_for_energy_tutorial)** an example project that is very similar to ours
+* **[gym environments](https://www.gymlibrary.dev//content/environment_creation/#)** tutorial on how to create a RL environment
