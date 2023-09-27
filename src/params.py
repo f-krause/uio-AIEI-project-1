@@ -27,9 +27,9 @@ unit_operational_cost_battery = 0.95 / 10
 # per unit charging / discharging cycle (10^4 $/MegaWattHour = 10 $/kWHour),
 # r_omc ^b
 
-# FIXME
-unit_reward_soldbackenergy = 1  # This is not specified in the instructions but probably also a parameter!
-# FIXME
+# MANUALLY ADDED
+sell_back_energy_price = 2
+# Price of energy sold to utility grid. According to instructions fixed at  0.2*10^4 $/MWh -> 10 $/kWh
 
 capacity_battery_storage = 300 / 1000
 # the capacity of the battery storage system (MegaWatt Hour = 1000 kWHour), e
