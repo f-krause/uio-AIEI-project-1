@@ -105,7 +105,10 @@ class Microgrid(object):
             * sell_back_energy_price
 
     def cost_of_epoch(self):
-        pass
+        energy_price_utility_grid = 10  # FIXME should come from data
+        energy_purchased = sum(self.actions_purchased) * energy_price_utility_grid
+
+        return energy_purchased + self.operational_cost() - self.sell_back_reward()
 
     def print_microgrid(self, file=None):
         print("Microgrid working status [solar PV, wind turbine, generator]=", self.working_status, ", SOC =", self.soc,
