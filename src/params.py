@@ -27,15 +27,15 @@ unit_operational_cost_battery = 0.95 / 10
 # per unit charging / discharging cycle (10^4 $/MegaWattHour = 10 $/kWHour),
 # r_omc ^b
 
-# FIXME
-unit_reward_soldbackenergy = 1  # This is not specified in the instructions but probably also a parameter!
-# FIXME
+# MANUALLY ADDED
+sell_back_energy_price = 2
+# Price of energy sold to utility grid. According to instructions fixed at  0.2*10^4 $/MWh -> 2 $/kWh
 
 capacity_battery_storage = 300 / 1000
 # the capacity of the battery storage system (MegaWatt Hour = 1000 kWHour), e
-SOC_max = 0.95 * capacity_battery_storage
+soc_max = 0.95 * capacity_battery_storage
 # the maximum state of charge of the battery system
-SOC_min = 0.05 * capacity_battery_storage
+soc_min = 0.05 * capacity_battery_storage
 # the minimum state of charge of the battery system
 area_solarPV = 1400 / (1000 * 1000)
 # the area of the solar PV system (km^2 = 1000*1000 m^2), a
@@ -70,11 +70,9 @@ number_windturbine = 1
 # the number of wind turbine in the onsite generation system, N_w
 number_generators = 1
 # the number of generators, n_g
-rated_output_power_generator = 60 / 1000
+rated_output_power_generator = 60 / 1000  # TODO check if this should be 160
 # the rated output power of the generator (MegaWatt = 1000 kW), G_p
-sell_back_price = 0.2e-4
-# fixed price
 
-# FIXME
-delta_t = 1  # is this a reasonable choice?
-# FIXME
+# MANUALLY ADDED
+delta_t = 1
+# time period in hours

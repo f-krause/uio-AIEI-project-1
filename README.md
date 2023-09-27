@@ -35,8 +35,6 @@ Mandatory exercise 1 for Artificial Intelligence for Energy Informatics.
 * pay attention to numbers: GW vs MW
 * TA will provide information about `Delta_t`
 
-## Setup
-
 
 ## Run module
 ```shell
@@ -71,26 +69,33 @@ pip install -r requirements.txt
 
 * **State:** energy price on market, current demand, current energy production capacity (solar/wind), current battery charge status
 * **Reward:** combination of costs and money obtained by utility grid
-    * overall reward: $C(t)=E_u(t)+O_m(t)-S_u(t)$
-    * energy purchased from grid $E_u(t)=E(t)\cdot P_g(t)$
-    * microgrid operational cost $O_m(t)$
-    * reward of energy sold back $S_u(t)$
+    * overall "reward" (to be minimized): $C(t)=E_u(t)+O_m(t)-S_u(t)$, with:
+      * $E_u(t)=E(t)\cdot P_g(t)$: energy purchased from grid 
+      * $O_m(t)$: microgrid operational cost 
+      * $S_u(t)$: reward of energy sold back 
     * long term goal: $\min\sum_{t=0}^\infty C(t)$
-* **Actions** at each point in time: 
+* **Actions** at each point in time (FIXME AREN'T THERE MORE?): 
     1. support the energy load (buy)
     2. sell back to utility grid (sell)
     3. store energy in the battery (do nothing)
+
+
+## Conventions
+* The main unit used for energy is kWh (prices need to be adapted accordingly!)
+
 
 ## Datasets
 
 * **[SolarIrradiance.csv:](https://drive.google.com/file/d/18vF2dbKmx-DfytXADhwPhE6PmLTw5bvR/view)** According to the provided code, we should only extract the `[W/m^2]` column from this dataset
 * **[rate_consumption_charge.csv/electricity price:](https://drive.google.com/file/d/1OzMEDDsbBO51AyzTs-fNusc-qvVQrI-U/view)** The provided code extracts the `Grid Electricity Price` (weird formatting: `Grid Elecricity Price锛?/kWh锛?2016`, could be `$/kWh`)
 * **[WindSpeed.csv:](https://drive.google.com/file/d/101OdwwF1cJIzshD-g0jqydmlqlTJ5HJg/view)** The provided code takes only column at index 3, which are the weird rounded values
+* **[Residential load profiles](https://data.openei.org/files/153/RESIDENTIAL_LOAD_DATA_E_PLUS_OUTPUT.zip)**: Check out data source [here](https://data.openei.org/submissions/153)
+
 
 ## RL software
 
 * **[pymgrid](https://github.com/Total-RD/pymgrid)** is discontinued, we looked at its successor python-microgrid
 * **[python-microgrid](https://github.com/ahalev/python-microgrid/tree/master)** can be used "to generate and simulate a large number of microgrids"; according to their [data section](https://github.com/ahalev/python-microgrid/tree/master#data), they als use OpenEI load data and PV datasets ("Data in pymgrid are based on TMY3 (data based on representative weather)", this might be EnergyPlus)
-* [**easygrid:**](https://github.com/YannBerthelot/easygrid/tree/main) a simple version based on [OpenAI gym](https://github.com/openai/gym), maybe we should use this to get started
+* **[easygrid:](https://github.com/YannBerthelot/easygrid/tree/main)** a simple version based on [OpenAI gym](https://github.com/openai/gym), maybe we should use this to get started
 * **[example tutorial](https://github.com/Wenuka/RL_for_energy_tutorial)** an example project that is very similar to ours
 * **[gym environments](https://www.gymlibrary.dev//content/environment_creation/#)** tutorial on how to create a RL environment
