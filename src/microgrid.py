@@ -1,4 +1,4 @@
-from src.params import *
+from params import *
 
 
 class Microgrid(object):

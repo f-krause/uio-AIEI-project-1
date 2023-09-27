@@ -1,9 +1,9 @@
-from src.get_data import load_data
-from src.microgrid_env import MicrogridEnv
+from get_data import load_data
+from microgrid_env import MicrogridEnv
 
 
 def main():
-    solarirradiance, windspeed, rate_consumption_charge = load_data()
+    solar_irradiance, wind_speed, rate_consumption_charge = load_data()
 
     grid = MicrogridEnv()
     # Print some random stuff for testing
