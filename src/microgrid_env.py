@@ -48,9 +48,9 @@ class MicrogridEnv(gym.Env):
             self.microgrid.working_status[0],
             self.microgrid.working_status[1],
             self.microgrid.working_status[2],
-            self.microgrid.SOC,
+            self.microgrid.soc,
             self.microgrid.solar_irradiance,
-            self.microgrid.windspeed,
+            self.microgrid.wind_speed,
             # Add other relevant variables here
         ]
         return np.array(observation)

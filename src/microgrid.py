@@ -3,44 +3,44 @@ from params import *
 
 class Microgrid(object):
     def __init__(self,
-                 workingstatus=[0, 0, 0],  # solar PV, wind turbine, generator
-                 SOC=0,  # state of charge
-                 actions_adjustingstatus=[0, 0, 0],
+                 working_status=[0, 0, 0],  # solar PV, wind turbine, generator
+                 soc=0,  # state of charge
+                 actions_adjusting_status=[0, 0, 0],
                  actions_solar=[0, 0, 0],  # the energy load (buy), charging battery (charge), sold back (sell)
                  actions_wind=[0, 0, 0],  # the energy load (buy), charging battery (charge), sold back (sell)
                  actions_generator=[0, 0, 0],  # the energy load (buy), charging battery (charge), sold back (sell)
                  actions_purchased=[0, 0],  # the energy load (buy), charging battery (charge)
                  actions_discharged=0,  # the energy load (buy)
-                 solarirradiance=0,
-                 windspeed=0):
-        self.working_status = workingstatus
-        self.SOC = SOC
-        self.actions_adjusting_status = actions_adjustingstatus
+                 solar_irradiance=0,
+                 wind_speed=0):
+        self.working_status = working_status
+        self.soc = soc
+        self.actions_adjusting_status = actions_adjusting_status
         self.actions_solar = actions_solar
         self.actions_wind = actions_wind
         self.actions_generator = actions_generator
         self.actions_purchased = actions_purchased
         self.actions_discharged = actions_discharged
-        self.solar_irradiance = solarirradiance
-        self.windspeed = windspeed
+        self.solar_irradiance = solar_irradiance
+        self.wind_speed = wind_speed
 
     def transition(self):
         working_status = self.working_status
-        soc = self.SOC
+        soc = self.soc
         if self.actions_adjusting_status[1 - 1] == 1:
             working_status[1 - 1] = 1
         else:
             working_status[1 - 1] = 0
-        if self.actions_adjusting_status[2 - 1] == 0 or self.windspeed > cutoff_windspeed or self.windspeed < cutin_windspeed:
+        if self.actions_adjusting_status[2 - 1] == 0 or self.wind_speed > cutoff_windspeed or self.wind_speed < cutin_windspeed:
             working_status[2 - 1] = 0
         else:
-            if self.actions_adjusting_status[2 - 1] == 1 and cutoff_windspeed >= self.windspeed >= cutin_windspeed:
+            if self.actions_adjusting_status[2 - 1] == 1 and cutoff_windspeed >= self.wind_speed >= cutin_windspeed:
                 working_status[2 - 1] = 1
         if self.actions_adjusting_status[3 - 1] == 1:
             working_status[3 - 1] = 1
         else:
             working_status[3 - 1] = 0
-        soc = self.SOC + (self.actions_solar[2 - 1] + self.actions_wind[2 - 1] + self.actions_generator[2 - 1] + \
+        soc = self.soc + (self.actions_solar[2 - 1] + self.actions_wind[2 - 1] + self.actions_generator[2 - 1] + \
                           self.actions_purchased[2 - 1]) * charging_discharging_efficiency - self.actions_discharged / charging_discharging_efficiency
         if soc > SOC_max:
             soc = SOC_max
@@ -59,10 +59,10 @@ class Microgrid(object):
         return energy_solar
 
     def energy_generated_wind(self):
-        if self.working_status[2 - 1] == 1 and rated_windspeed > self.windspeed >= cutin_windspeed:
-            energy_wind = number_windturbine * rated_power_wind_turbine * (self.windspeed - cutin_windspeed) / (rated_windspeed - cutin_windspeed)
+        if self.working_status[2 - 1] == 1 and rated_windspeed > self.wind_speed >= cutin_windspeed:
+            energy_wind = number_windturbine * rated_power_wind_turbine * (self.wind_speed - cutin_windspeed) / (rated_windspeed - cutin_windspeed)
         else:
-            if self.working_status[2 - 1] == 1 and cutoff_windspeed > self.windspeed >= rated_windspeed:
+            if self.working_status[2 - 1] == 1 and cutoff_windspeed > self.wind_speed >= rated_windspeed:
                 energy_wind = number_windturbine * rated_power_wind_turbine * delta_t
             else:
                 energy_wind = 0
@@ -80,18 +80,22 @@ class Microgrid(object):
         energy_wind = self.energy_generated_wind()
         energy_generator = self.energy_generated_generator()
 
-        operational_cost = energy_solar * unit_operational_cost_solar + energy_wind * \
-                           unit_operational_cost_wind + energy_generator * unit_operational_cost_generator
+        operational_cost = energy_solar * unit_operational_cost_solar + \
+                           energy_wind * unit_operational_cost_wind + \
+                           energy_generator * unit_operational_cost_generator
         operational_cost += (self.actions_discharged + self.actions_solar[2 - 1] + self.actions_wind[2 - 1] + \
                              self.actions_generator[2 - 1]) * delta_t * unit_operational_cost_battery / \
                             (2 * capacity_battery_storage * (SOC_max - SOC_min))
         return operational_cost
 
     def sold_back_reward(self):
-        return (self.actions_solar[3 - 1] + self.actions_wind[3 - 1] + self.actions_generator[3 - 1]) * unit_reward_soldbackenergy
+        return (self.actions_solar[3 - 1] + self.actions_wind[3 - 1] + self.actions_generator[3 - 1]) * sell_back_energy_price
+
+    def cost_of_epoch(self):
+        pass
 
     def print_microgrid(self, file=None):
-        print("Microgrid working status [solar PV, wind turbine, generator]=", self.working_status, ", SOC =", self.SOC, file=file)
+        print("Microgrid working status [solar PV, wind turbine, generator]=", self.working_status, ", SOC =", self.soc, file=file)
         print("microgrid actions [solar PV, wind turbine, generator]=", self.actions_adjusting_status, file=file)
         print("solar energy supporting [the energy load, charging battery, sold back]=", self.actions_solar, file=file)
         print("wind energy supporting [the energy load, charging battery, sold back]=", self.actions_wind, file=file)
@@ -99,6 +103,6 @@ class Microgrid(object):
         print("energy purchased from grid supporting [the energy load, charging battery]=", self.actions_purchased, file=file)
         print("energy discharged by the battery supporting the energy load =", self.actions_discharged, file=file)
         print("solar irradiance =", self.solar_irradiance, file=file)
-        print("wind speed =", self.windspeed, file=file)
+        print("wind speed =", self.wind_speed, file=file)
         print("Microgrid Energy Consumption =", self.energy_consumption(), file=file)
         print("Microgrid Operational Cost =", self.operational_cost())
