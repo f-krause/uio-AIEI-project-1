@@ -14,16 +14,26 @@ Mandatory exercise 1 for Artificial Intelligence for Energy Informatics.
 
 ## Questions
 
-1. Why are the tables `rate_consumption_charge.csv` and `SolarIrradiance.csv` the same?
-    * Maybe we need to extract different columns from the same table?
-2. Why is there an additional column in the `WindSpeed.csv` dataset that maps any number `x.y` to `x.5`?
-3. What should be take from the big dataset? I.e. the load data?
-4. Where can we find the $\delta_{omc}$ values for the different generation methods?
-    * Maybe they are the $\gamma_{omc}$ in the tables.
-5. Where can we find how to calculate $E_g(t)$ and $E_b(t)$? (For $E_w(t)$ and $E_s(t)$ the formulas are given, are we missing something?)
-6. Why do the time ranges of the datasets differ so much? (for instance: year 2004 for YM3, and 2016 for solar irradiance) Should we just assume that the yearly data is the same?
-7. Why are the solar/wind/rate consumption datasets only for half of a year? (around 4320 hours vs 365*24=8760?) And if yes, when in the year do they start?
-8. There are many columns in the household load data, like `Electricity:Facility [kW](Hourly)`, `Fans:Electricity [kW](Hourly)`, or `Cooling:Electricity [kW](Hourly)`. Which columns of the load data should we use? Should we use the overall consumption of the household?
+1. What should be take from the big dataset? I.e. the load data? Which dataset should we use for gathering the residential load data? There are many columns in the household load data, like `Electricity:Facility [kW](Hourly)`, `Fans:Electricity [kW](Hourly)`, or `Cooling:Electricity [kW](Hourly)`. Which columns of the load data should we use? Should we use the overall consumption of the household?
+    * Felix' dataset is good
+    * just `Electricity:Facility [kW](Hourly)`
+    * 25 households: sum up overall electricity consumption
+2. Why do the time ranges of the datasets differ so much? (for instance: year 2004 for YM3, and 2016 for solar irradiance) Should we just assume that the yearly data is the same? Why are the solar/wind/rate consumption datasets only for half of a year? (around 4320 hours vs 365*24=8760?) And if yes, when in the year do they start?
+    * TA will make sure that we have a full year for the small/too short datasets
+    * load another year is fine
+    * one column was shifted to the top
+3. Where can we find how to calculate $E_g(t)$ and $E_b(t)$? (For $E_w(t)$ and $E_s(t)$ the formulas are given, are we missing something?)
+    * should be in the code
+4. Why are the tables `rate_consumption_charge.csv` and `SolarIrradiance.csv` the same?
+    * Maybe we need to extract different columns from the same table? YES
+5. Why is there an additional column in the `WindSpeed.csv` dataset that maps any number `x.y` to `x.5`?
+    * TA will write an email about that and update the assignment
+6. Where can we find the $\delta_{omc}$ values for the different generation methods?
+    * Maybe they are the $\gamma_{omc}$ in the tables. 
+
+* any RL is fine
+* pay attention to numbers: GW vs MW
+* TA will provide information about `Delta_t`
 
 ## Setup
 
