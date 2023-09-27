@@ -33,9 +33,9 @@ sell_back_energy_price = 2
 
 capacity_battery_storage = 300 / 1000
 # the capacity of the battery storage system (MegaWatt Hour = 1000 kWHour), e
-SOC_max = 0.95 * capacity_battery_storage
+soc_max = 0.95 * capacity_battery_storage
 # the maximum state of charge of the battery system
-SOC_min = 0.05 * capacity_battery_storage
+soc_min = 0.05 * capacity_battery_storage
 # the minimum state of charge of the battery system
 area_solarPV = 1400 / (1000 * 1000)
 # the area of the solar PV system (km^2 = 1000*1000 m^2), a

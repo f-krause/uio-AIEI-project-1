@@ -15,7 +15,7 @@ class MicrogridEnv(gym.Env):
                 "wind": spaces.Box(0, np.inf, dtype=float),
                 "electricity price": spaces.Box(0, np.inf, dtype=float),
                 "load": spaces.Box(0, np.inf, dtype=float),
-                "battery": spaces.Box(SOC_min, SOC_max, dtype=float),
+                "battery": spaces.Box(soc_min, soc_max, dtype=float),
             }
         )
         # Initialize your Microgrid
@@ -45,9 +45,9 @@ class MicrogridEnv(gym.Env):
     def get_observation(self):
         # Extract relevant information from the Microgrid's state and return it as an observation
         observation = [
-            self.microgrid.working_status[0],
-            self.microgrid.working_status[1],
-            self.microgrid.working_status[2],
+            self.microgrid.working_status["s"],
+            self.microgrid.working_status["w"],
+            self.microgrid.working_status["g"],
             self.microgrid.soc,
             self.microgrid.solar_irradiance,
             self.microgrid.wind_speed,
@@ -56,7 +56,7 @@ class MicrogridEnv(gym.Env):
         return np.array(observation)
 
     def compute_reward(self):
-        return self.microgrid.energy_consumption() * sell_back_price + self.microgrid.operational_cost() - self.microgrid.sold_back_reward()
+        return self.microgrid.energy_consumption() * sell_back_price + self.microgrid.operational_cost() - self.microgrid.sell_back_reward()
 
     def render(self, mode='human'):
         pass
