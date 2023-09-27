@@ -1,4 +1,4 @@
-from params import *
+from src.params import *
 
 
 class Microgrid(object):
@@ -61,6 +61,7 @@ class Microgrid(object):
 
     def energy_consumption(self):
         # FIXME isn't this energy production?
+        # And what do we need this for? Why negative?
         return -(self.actions_solar["load"] + self.actions_wind["load"] + self.actions_generator[
             "load"] + self.actions_discharged)
 
@@ -95,7 +96,7 @@ class Microgrid(object):
                            self.energy_generated_wind() * unit_operational_cost_wind + \
                            self.energy_generated_generator() * unit_operational_cost_generator
         # Cost of battery usage
-        operational_cost += (self.actions_discharged + self.actions_solar["battery"] + self.actions_wind["battery"] \
+        operational_cost += (self.actions_discharged + self.actions_solar["battery"] + self.actions_wind["battery"]
                              + self.actions_generator["battery"]) * delta_t * unit_operational_cost_battery / \
                             (2 * capacity_battery_storage * (soc_max - soc_min))
         return operational_cost

@@ -1,5 +1,5 @@
-from get_data import load_data
-from microgrid_env import MicrogridEnv
+from src.get_data import load_data
+from src.microgrid_env import MicrogridEnv
 
 
 def main():

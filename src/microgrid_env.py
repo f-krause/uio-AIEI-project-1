@@ -1,8 +1,8 @@
 import gym
 from gym import spaces
 
-from params import *
-from microgrid import Microgrid
+from src.params import *
+from src.microgrid import Microgrid
 
 
 class MicrogridEnv(gym.Env):
