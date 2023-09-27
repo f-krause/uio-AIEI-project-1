@@ -56,7 +56,7 @@ class MicrogridEnv(gym.Env):
         return np.array(observation)
 
     def compute_reward(self):
-        return self.microgrid.energy_consumption() * sell_back_price + self.microgrid.operational_cost() - self.microgrid.sell_back_reward()
+        return self.microgrid.cost_of_epoch()
 
     def render(self, mode='human'):
         pass
