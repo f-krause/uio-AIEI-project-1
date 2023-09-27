@@ -7,7 +7,9 @@ def main():
 
     grid = MicrogridEnv()
     # Print some random stuff for testing
-    print(grid.get_observation())
+    print("GridEnv observation:", grid.get_observation())
+    print("Cost of epoch:", grid.microgrid.cost_of_epoch())
+    print("--------------")
     print(grid.microgrid.print_microgrid())
 
 
