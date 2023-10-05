@@ -1,12 +1,13 @@
 import gym
 from gym import spaces
+import pandas as pd
 
 from params import *
 from microgrid import Microgrid
 
 
 class MicrogridEnv(gym.Env):
-    def __init__(self):
+    def __init__(self, env_df):
         # Define the action and observation spaces
         self.action_space = spaces.Discrete(3)  # Assuming 3 possible actions for each component
         self.observation_space = spaces.Dict(
@@ -20,12 +21,18 @@ class MicrogridEnv(gym.Env):
         )
         # Initialize your Microgrid
         self.microgrid = Microgrid()
+        self.env_df = env_df
+        self.step_count = 0
 
     def reset(self, **kwargs):
+        self.step_count = 0
         # Reset the Microgrid to its initial state
         self.microgrid = Microgrid()
         # Return the initial observation
-        return self.get_observation()
+        return self.get_observation(), None # TODO: replace None with environment info
+
+    def update_environment(self):
+        ...
 
     def step(self, action):
         # Execute the chosen action on the Microgrid
@@ -37,10 +44,11 @@ class MicrogridEnv(gym.Env):
         reward = self.compute_reward()
 
         # Check if the episode is done (you can define a termination condition here)
-        done = False  # You need to define when an episode is done
+        self.step_count += 1
+        done = self.step_count >= len(self.env_df)  # You need to define when an episode is done
 
         # Return the next observation, reward, done flag, and any additional info
-        return self.get_observation(), reward, done, {}
+        return self.get_observation(), reward, done, {}, None # TODO: decide whether we should return env info instead of None
 
     def get_observation(self):
         # Extract relevant information from the Microgrid's state and return it as an observation
