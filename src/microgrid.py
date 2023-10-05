@@ -46,7 +46,7 @@ class Microgrid(object):
         self.actions_solar = Microgrid.get_actions_dict(action["solar"])
         self.actions_wind = Microgrid.get_actions_dict(action["wind"])
         self.actions_generator = Microgrid.get_actions_dict(action["generator"])
-        self.actions_purchased = action["purchased"]
+        self.actions_purchased = Microgrid.get_actions_dict(action["purchased"], ["load", "battery"])
         self.actions_discharged = action["discharged"][0]
 
     def update_working_status(self):
@@ -128,7 +128,7 @@ class Microgrid(object):
             * sell_back_energy_price
 
     def cost_of_epoch(self):
-        energy_purchased = sum(self.actions_purchased) * self.energy_price_utility_grid
+        energy_purchased = sum(self.actions_purchased.values()) * self.energy_price_utility_grid
 
         if self.energy_load() < self.energy_demand:
             energy_purchased += blackout_cost

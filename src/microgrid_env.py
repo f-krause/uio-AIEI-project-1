@@ -28,8 +28,8 @@ class MicrogridEnv(gym.Env):
         )
         # Initialize your Microgrid
         self.microgrid = Microgrid()
-        self.data_dict = data_dict
         self.step_count = 0
+        self.data_dict = data_dict # hourly environment data
 
     def reset(self, **kwargs):
         self.step_count = 0
@@ -47,7 +47,8 @@ class MicrogridEnv(gym.Env):
 
         # Check if the episode is done (you can define a termination condition here)
         self.step_count += 1
-        done = self.step_count >= len(self.data_dict)  # You need to define when an episode is done
+        max_epochs = len(self.data_dict["wind_speed"]) # this is NOT len(self.data_dict), this would return len(self.data_dict.keys())
+        done = self.step_count >= max_epochs  # You need to define when an episode is done
 
         # Return the next observation, reward, done flag, and any additional info
         return self.get_observation(), reward, done, {}, None  # TODO: decide whether we should return env info instead of None
