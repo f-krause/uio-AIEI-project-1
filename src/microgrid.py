@@ -11,7 +11,7 @@ class Microgrid(object):
 
                  # Actions
                  actions_adjusting_status=[0, 0, 0],  # adjusting the working status
-                 actions_solar=[0, 0, 0],  # energy to support: energy load, charging battery or selling to utility grig
+                 actions_solar=[0, 0, 0],  # energy to support: energy load, charging battery or selling to utility grid
                  actions_wind=[0, 0, 0],
                  actions_generator=[0, 0, 0],
                  actions_purchased=[0, 0],  # buy energy from utility grid for energy load or to charge battery
