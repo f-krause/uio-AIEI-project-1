@@ -31,8 +31,10 @@ class Microgrid(object):
         self.actions_discharged = actions_discharged
 
     @staticmethod
-    def get_actions_dict(ls: list) -> dict:
-        return {"load": ls[0], "battery": ls[1], "sell": ls[2]}
+    def get_actions_dict(ls: list, actions=None) -> dict:
+        if not actions:
+            actions = ["load", "battery", "sell"]
+        return {a: l for a, l in zip(actions, ls)}
 
     def transition(self):
         working_status = self.working_status
