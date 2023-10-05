@@ -39,15 +39,18 @@ class MicrogridEnv(gym.Env):
         return self.get_observation(), None # TODO: replace None with environment info
 
     def update_environment(self):
-        ...
-
+        current_row = self.env_df.iloc[self.step_count]
+        self.microgrid.solar_irradiance = current_row["Solar Irradiance"]
+        self.microgrid.wind_speed = current_row["Wind Speed"]
+        self.microgrid.energy_price_utility_grid = current_row["Grid Electricity Price"]
+        # TODO: the load should probably influence the environment
+        # = current_row["warehouse 1"] + current_row["small hotel 1"]
+        
     def step(self, action):
-        # Execute the chosen action on the Microgrid
         # Update the Microgrid's state and compute the reward
-        # TODO: put actions
-        # TODO: update env
         self.update_environment()
 
+        # Execute the chosen action on the Microgrid
         self.microgrid.actions_adjusting_status = Microgrid.get_actions_dict(action["adjusting status"], actions=["s", "w", "g"])
         self.microgrid.actions_solar = Microgrid.get_actions_dict(action["solar"])
         self.microgrid.actions_wind = Microgrid.get_actions_dict(action["wind"])

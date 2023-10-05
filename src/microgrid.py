@@ -8,6 +8,7 @@ class Microgrid(object):
                  soc=0,  # state of charge of the battery system
                  solar_irradiance=0,  # solar irradiance at current decision epoch
                  wind_speed=0,  # wind speed at current decision epoch
+                 energy_price_utility_grid=np.inf, # rate consumption charge, should come from data
 
                  # Actions
                  actions_adjusting_status=[0, 0, 0],  # binary: adjusting the working status
@@ -21,6 +22,7 @@ class Microgrid(object):
         self.soc = soc
         self.solar_irradiance = solar_irradiance
         self.wind_speed = wind_speed
+        self.energy_price_utility_grid = energy_price_utility_grid
 
         self.actions_adjusting_status = {"s": actions_adjusting_status[0], "w": actions_adjusting_status[1],
                                          "g": actions_adjusting_status[2]}
@@ -108,8 +110,7 @@ class Microgrid(object):
             * sell_back_energy_price
 
     def cost_of_epoch(self):
-        energy_price_utility_grid = 10  # FIXME should come from data
-        energy_purchased = sum(self.actions_purchased) * energy_price_utility_grid
+        energy_purchased = sum(self.actions_purchased) * self.energy_price_utility_grid
 
         # TODO: cost of blackout?
 
