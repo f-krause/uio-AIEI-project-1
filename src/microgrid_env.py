@@ -9,7 +9,14 @@ from microgrid import Microgrid
 class MicrogridEnv(gym.Env):
     def __init__(self, env_df):
         # Define the action and observation spaces
-        self.action_space = spaces.Discrete(3)  # Assuming 3 possible actions for each component
+        self.action_space = spaces.Dict({
+            "adjusting status": spaces.MultiBinary(3), # {0,1}^3
+            "solar": spaces.Box(0, np.inf, shape=(3,), dtype=float),
+            "wind": spaces.Box(0, np.inf, shape=(3,), dtype=float),
+            "generator": spaces.Box(0, np.inf, shape=(3,), dtype=float),
+            "purchased": spaces.Box(0, np.inf, shape=(2,), dtype=float),
+            "discharged": spaces.Box(0, np.inf, dtype=float),
+        })
         self.observation_space = spaces.Dict(
             {
                 "solar": spaces.Box(0, np.inf, dtype=float),
@@ -38,6 +45,16 @@ class MicrogridEnv(gym.Env):
         # Execute the chosen action on the Microgrid
         # Update the Microgrid's state and compute the reward
         # TODO: put actions
+        # TODO: update env
+        self.update_environment()
+
+        self.microgrid.actions_adjusting_status = Microgrid.get_actions_dict(action["adjusting status"], actions=["s", "w", "g"])
+        self.microgrid.actions_solar = Microgrid.get_actions_dict(action["solar"])
+        self.microgrid.actions_wind = Microgrid.get_actions_dict(action["wind"])
+        self.microgrid.actions_generator = Microgrid.get_actions_dict(action["generator"])
+        self.microgrid.actions_purchased = action["purchased"]
+        self.microgrid.actions_discharged = action["discharged"][0]
+
         self.microgrid.transition()
 
         # Calculate the reward based on your cost reduction goal
