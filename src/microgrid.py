@@ -52,8 +52,8 @@ class Microgrid(object):
 
         energy_for_battery = self.actions_solar["battery"] + self.actions_wind["battery"] + \
                              self.actions_generator["battery"] + self.actions_purchased[2 - 1]
-        battery_energy_loss = self.actions_discharged / charging_discharging_efficiency
-        soc = self.soc + energy_for_battery * charging_discharging_efficiency - battery_energy_loss
+        energy_from_battery = self.actions_discharged / charging_discharging_efficiency
+        soc = self.soc + energy_for_battery * charging_discharging_efficiency - energy_from_battery
 
         if soc > soc_max:
             soc = soc_max
@@ -110,6 +110,8 @@ class Microgrid(object):
     def cost_of_epoch(self):
         energy_price_utility_grid = 10  # FIXME should come from data
         energy_purchased = sum(self.actions_purchased) * energy_price_utility_grid
+
+        # TODO: cost of blackout?
 
         return energy_purchased + self.operational_cost() - self.sell_back_reward()
 
