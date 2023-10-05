@@ -11,6 +11,7 @@ Mandatory exercise 1 for Artificial Intelligence for Energy Informatics.
 * How to put everything at easygrid?
 * `train` function
 * How can we create reasonable train/val/test splits?
+* (Format dates in csv's to datetime)
 
 ## Questions
 
@@ -86,9 +87,9 @@ pip install -r requirements.txt
 
 ## Datasets
 
-* **[SolarIrradiance.csv:](https://drive.google.com/file/d/18vF2dbKmx-DfytXADhwPhE6PmLTw5bvR/view)** According to the provided code, we should only extract the `[W/m^2]` column from this dataset
-* **[rate_consumption_charge.csv/electricity price:](https://drive.google.com/file/d/1OzMEDDsbBO51AyzTs-fNusc-qvVQrI-U/view)** The provided code extracts the `Grid Electricity Price` (weird formatting: `Grid Elecricity Price锛?/kWh锛?2016`, could be `$/kWh`)
-* **[WindSpeed.csv:](https://drive.google.com/file/d/101OdwwF1cJIzshD-g0jqydmlqlTJ5HJg/view)** The provided code takes only column at index 3, which are the weird rounded values
+* **[SolarIrradiance.csv:](https://drive.google.com/file/d/1SUjtybPtUzwSEDQoqXbMNijEeDi8QF8m/view)** According to the provided code, we should only extract the `[W/m^2]` column from this dataset
+* **[rate_consumption_charge.csv/electricity price:](https://drive.google.com/file/d/1uxM9TC401TBwjcdxe3i7TAxSo9tPNWi1/view)** The provided code extracts the `Grid Electricity Price` (weird formatting: `Grid Elecricity Price锛?/kWh锛?2016`, could be `$/kWh`)
+* **[WindSpeed.csv:](https://drive.google.com/file/d/1X87VRm88-Tp2cs9zjmOB0R6wTxJl8QBf/view)** The provided code takes only column at index 3, which are the weird rounded values
 * **[Residential load profiles](https://data.openei.org/files/153/RESIDENTIAL_LOAD_DATA_E_PLUS_OUTPUT.zip)**: Check out data source [here](https://data.openei.org/submissions/153)
 
 

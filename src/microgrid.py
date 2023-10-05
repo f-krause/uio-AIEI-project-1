@@ -10,11 +10,11 @@ class Microgrid(object):
                  wind_speed=0,  # wind speed at current decision epoch
 
                  # Actions
-                 actions_adjusting_status=[0, 0, 0],  # adjusting the working status
-                 actions_solar=[0, 0, 0],  # energy to support: energy load, charging battery or selling to utility grid
+                 actions_adjusting_status=[0, 0, 0],  # binary: adjusting the working status
+                 actions_solar=[0, 0, 0],  # energy (kWh) to support: energy load, charging battery or selling to utility grig
                  actions_wind=[0, 0, 0],
                  actions_generator=[0, 0, 0],
-                 actions_purchased=[0, 0],  # buy energy from utility grid for energy load or to charge battery
+                 actions_purchased=[0, 0],  # buy energy from utility grid for: [kWh for energy load, kWh to charge battery]
                  actions_discharged=0,  # energy discharged by the battery for supporting the energy load
                  ):
         self.working_status = {"s": working_status[0], "w": working_status[1], "g": working_status[2]}
