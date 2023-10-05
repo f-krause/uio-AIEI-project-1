@@ -5,7 +5,7 @@ from microgrid_env import MicrogridEnv
 def main():
     data_dict = get_data_dict()
 
-    grid = MicrogridEnv()
+    grid = MicrogridEnv(data_dict)
     # Print some random stuff for testing
     print("GridEnv observation:", grid.get_observation())
     print("Cost of epoch:", grid.microgrid.cost_of_epoch())
