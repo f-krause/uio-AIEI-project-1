@@ -44,7 +44,7 @@ class MicrogridEnv(gym.Env):
         self.microgrid.wind_speed = current_row["Wind Speed"]
         self.microgrid.energy_price_utility_grid = current_row["Grid Electricity Price"]
         # TODO: the load should probably influence the environment
-        # = current_row["warehouse 1"] + current_row["small hotel 1"]
+        #self.microgrid.load = current_row["warehouse 1"] + current_row["small hotel 1"]
         
     def step(self, action):
         # Update the Microgrid's state and compute the reward
