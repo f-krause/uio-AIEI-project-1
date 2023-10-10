@@ -7,7 +7,7 @@ from microgrid import Microgrid
 
 
 class MicrogridEnv(gym.Env):
-    def __init__(self, env_df):
+    def __init__(self, data_dict):
         # Define the action and observation spaces
         self.action_space = spaces.Dict({
             "adjusting status": spaces.MultiBinary(3), # {0,1}^3
@@ -28,7 +28,7 @@ class MicrogridEnv(gym.Env):
         )
         # Initialize your Microgrid
         self.microgrid = Microgrid()
-        self.env_df = env_df
+        self.data_dict = data_dict
         self.step_count = 0
 
     def reset(self, **kwargs):
@@ -39,7 +39,7 @@ class MicrogridEnv(gym.Env):
         return self.get_observation(), None # TODO: replace None with environment info
 
     def update_environment(self):
-        current_row = self.env_df.iloc[self.step_count]
+        current_row = self.data_dict.iloc[self.step_count]
         self.microgrid.solar_irradiance = current_row["Solar Irradiance"]
         self.microgrid.wind_speed = current_row["Wind Speed"]
         self.microgrid.energy_price_utility_grid = current_row["Grid Electricity Price"]
@@ -65,7 +65,7 @@ class MicrogridEnv(gym.Env):
 
         # Check if the episode is done (you can define a termination condition here)
         self.step_count += 1
-        done = self.step_count >= len(self.env_df)  # You need to define when an episode is done
+        done = self.step_count >= len(self.data_dict)  # You need to define when an episode is done
 
         # Return the next observation, reward, done flag, and any additional info
         return self.get_observation(), reward, done, {}, None # TODO: decide whether we should return env info instead of None

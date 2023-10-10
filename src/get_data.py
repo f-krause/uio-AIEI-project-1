@@ -48,9 +48,9 @@ def get_environment_data():
     return solarirradiance, windspeed, rate_consumption_charge
 
 
-def get_data_dict():
+def get_data_dict(k=10, region="CA"):
     solar_irradiance, wind_speed, rate_consumption_charge = get_environment_data()
-    energy_demand = get_energy_demand_data(k=10, region="CA")
+    energy_demand = get_energy_demand_data(k=k, region=region)
 
     if not energy_demand.shape[0] == solar_irradiance.shape[0] == wind_speed.shape[0] == rate_consumption_charge.shape[0]:
         print("Household demand:", energy_demand.shape[0])
