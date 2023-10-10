@@ -1,4 +1,4 @@
-from params import *
+from src.params import *
 
 
 class Microgrid(object):
@@ -6,7 +6,8 @@ class Microgrid(object):
                  # Environment
                  working_status=[0, 0, 0],  # working status of solar PV, wind turbine, generator
                  energy_demand=0,  # energy demand (kWh) for one unit (hour)
-                 soc=0,  # state of charge of the battery system
+                 # TODO: find out at which value we start
+                 soc=soc_min,  # state of charge of the battery system
                  solar_irradiance=0,  # solar irradiance at current decision epoch
                  wind_speed=0,  # wind speed at current decision epoch
                  energy_price_utility_grid=np.inf,  # rate consumption charge, should come from data
@@ -41,8 +42,10 @@ class Microgrid(object):
         return {a: l for a, l in zip(actions, ls)}
 
     def update_actions(self, action):
-        self.actions_adjusting_status = Microgrid.get_actions_dict(action["adjusting status"],
-                                                                   actions=["solar", "wind", "generator"])
+        self.actions_adjusting_status = Microgrid.get_actions_dict(
+            [action["adjusting status %d" % i] for i in range(3)],
+            actions=["solar", "wind", "generator"],
+        )
         self.actions_solar = Microgrid.get_actions_dict(action["solar"])
         self.actions_wind = Microgrid.get_actions_dict(action["wind"])
         self.actions_generator = Microgrid.get_actions_dict(action["generator"])
