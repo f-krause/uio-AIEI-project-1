@@ -5,10 +5,11 @@ class Microgrid(object):
     def __init__(self,
                  # Environment
                  working_status=[0, 0, 0],  # working status of solar PV, wind turbine, generator
+                 energy_demand=0,  # energy demand (kWh) for one unit (hour)
                  soc=0,  # state of charge of the battery system
                  solar_irradiance=0,  # solar irradiance at current decision epoch
                  wind_speed=0,  # wind speed at current decision epoch
-                 energy_price_utility_grid=np.inf, # rate consumption charge, should come from data
+                 energy_price_utility_grid=np.inf,  # rate consumption charge, should come from data
 
                  # Actions
                  actions_adjusting_status=[0, 0, 0],  # binary: adjusting the working status
@@ -18,77 +19,94 @@ class Microgrid(object):
                  actions_purchased=[0, 0],  # buy energy from utility grid for: [kWh for energy load, kWh to charge battery]
                  actions_discharged=0,  # energy discharged by the battery for supporting the energy load
                  ):
-        self.working_status = {"s": working_status[0], "w": working_status[1], "g": working_status[2]}
+        # Environment
+        self.working_status = self.get_actions_dict(working_status, actions=["solar", "wind", "generator"])
+        self.energy_demand = energy_demand
         self.soc = soc
         self.solar_irradiance = solar_irradiance
         self.wind_speed = wind_speed
         self.energy_price_utility_grid = energy_price_utility_grid
 
-        self.actions_adjusting_status = {"s": actions_adjusting_status[0], "w": actions_adjusting_status[1],
-                                         "g": actions_adjusting_status[2]}
+        # Actions
+        self.actions_adjusting_status = self.get_actions_dict(actions_adjusting_status,
+                                                              actions=["solar", "wind", "generator"])
         self.actions_solar = self.get_actions_dict(actions_solar)
         self.actions_wind = self.get_actions_dict(actions_wind)
         self.actions_generator = self.get_actions_dict(actions_generator)
-        self.actions_purchased = actions_purchased
+        self.actions_purchased = self.get_actions_dict(actions_purchased, ["load", "battery"])
         self.actions_discharged = actions_discharged
 
     @staticmethod
-    def get_actions_dict(ls: list, actions=None) -> dict:
-        if not actions:
-            actions = ["load", "battery", "sell"]
+    def get_actions_dict(ls: list, actions=["load", "battery", "sell"]) -> dict:
         return {a: l for a, l in zip(actions, ls)}
 
-    def transition(self):
-        working_status = self.working_status
-        working_status["s"] = self.actions_adjusting_status["s"]
-        working_status["g"] = self.actions_adjusting_status["g"]
+    def update_actions(self, action):
+        self.actions_adjusting_status = Microgrid.get_actions_dict(action["adjusting status"],
+                                                                   actions=["solar", "wind", "generator"])
+        self.actions_solar = Microgrid.get_actions_dict(action["solar"])
+        self.actions_wind = Microgrid.get_actions_dict(action["wind"])
+        self.actions_generator = Microgrid.get_actions_dict(action["generator"])
+        self.actions_purchased = Microgrid.get_actions_dict(action["purchased"], ["load", "battery"])
+        self.actions_discharged = action["discharged"][0]
+
+    def update_working_status(self):
+        self.working_status["solar"] = self.actions_adjusting_status["solar"]
+        self.working_status["generator"] = self.actions_adjusting_status["generator"]
 
         if (
-                self.actions_adjusting_status["w"] == 0 or
+                self.actions_adjusting_status["wind"] == 0 or
                 self.wind_speed > cutoff_windspeed or
                 self.wind_speed < cutin_windspeed
         ):
-            working_status["w"] = 0
+            self.working_status["wind"] = 0
         else:
-            working_status["w"] = 1
+            self.working_status["wind"] = 1
+
+    def update_environment(self, data_dict, step_count):
+        self.energy_demand = data_dict["energy_demand"][step_count]
+        self.solar_irradiance = data_dict["solar_irradiance"][step_count]
+        self.wind_speed = data_dict["wind_speed"][step_count]
+        self.energy_price_utility_grid = data_dict["rate_consumption_charge"][step_count]
 
         energy_for_battery = self.actions_solar["battery"] + self.actions_wind["battery"] + \
-                             self.actions_generator["battery"] + self.actions_purchased[2 - 1]
+                             self.actions_generator["battery"] + self.actions_purchased["battery"]
         energy_from_battery = self.actions_discharged / charging_discharging_efficiency
-        soc = self.soc + energy_for_battery * charging_discharging_efficiency - energy_from_battery
+        self.soc = self.soc + energy_for_battery * charging_discharging_efficiency - energy_from_battery
 
-        if soc > soc_max:
-            soc = soc_max
-        if soc < soc_min:
-            soc = soc_min
-        return list(working_status.values()), soc
+        if self.soc > soc_max:
+            self.soc = soc_max
+        if self.soc < soc_min:
+            self.soc = soc_min
 
-    def energy_consumption(self):
-        # FIXME isn't this energy production?
-        # And what do we need this for? Why negative?
-        return -(self.actions_solar["load"] + self.actions_wind["load"] + self.actions_generator[
-            "load"] + self.actions_discharged)
+    def transition(self, action, data_dict, step_count):
+        self.update_actions(action)
+        self.update_working_status()
+        self.update_environment(data_dict, step_count)
+
+    def energy_load(self):
+        energy_production = self.actions_solar["load"] + self.actions_wind["load"] + self.actions_generator["load"]
+        return energy_production + self.actions_discharged + self.actions_purchased["load"]
 
     def energy_generated_solar(self):
-        if self.working_status["s"] == 1:
+        if self.working_status["solar"] == 1:
             energy_solar = self.solar_irradiance * area_solarPV * efficiency_solarPV / 1000
         else:
             energy_solar = 0
         return energy_solar
 
     def energy_generated_wind(self):
-        if self.working_status["w"] == 1 and rated_windspeed > self.wind_speed >= cutin_windspeed:
+        if self.working_status["wind"] == 1 and rated_windspeed > self.wind_speed >= cutin_windspeed:
             energy_wind = number_windturbine * rated_power_wind_turbine * (self.wind_speed - cutin_windspeed) / (
                         rated_windspeed - cutin_windspeed)
         else:
-            if self.working_status["w"] == 1 and cutoff_windspeed > self.wind_speed >= rated_windspeed:
+            if self.working_status["wind"] == 1 and cutoff_windspeed > self.wind_speed >= rated_windspeed:
                 energy_wind = number_windturbine * rated_power_wind_turbine * delta_t
             else:
                 energy_wind = 0
         return energy_wind
 
     def energy_generated_generator(self):
-        if self.working_status["g"] == 1:
+        if self.working_status["generator"] == 1:
             energy_generator = number_generators * rated_output_power_generator * delta_t
         else:
             energy_generator = 0
@@ -110,9 +128,10 @@ class Microgrid(object):
             * sell_back_energy_price
 
     def cost_of_epoch(self):
-        energy_purchased = sum(self.actions_purchased) * self.energy_price_utility_grid
+        energy_purchased = sum(self.actions_purchased.values()) * self.energy_price_utility_grid
 
-        # TODO: cost of blackout?
+        if self.energy_load() < self.energy_demand:
+            energy_purchased += blackout_cost
 
         return energy_purchased + self.operational_cost() - self.sell_back_reward()
 
@@ -129,5 +148,5 @@ class Microgrid(object):
         print("energy discharged by the battery supporting the energy load =", self.actions_discharged, file=file)
         print("solar irradiance =", self.solar_irradiance, file=file)
         print("wind speed =", self.wind_speed, file=file)
-        print("Microgrid Energy Consumption =", self.energy_consumption(), file=file)
+        print("Microgrid Energy Consumption =", self.energy_load(), file=file)
         print("Microgrid Operational Cost =", self.operational_cost())

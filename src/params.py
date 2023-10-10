@@ -76,3 +76,5 @@ rated_output_power_generator = 60 / 1000  # TODO check if this should be 160
 # MANUALLY ADDED
 delta_t = 1
 # time period in hours
+blackout_cost = 10_000  # TODO needs to be adapted
+# cost of a boackout, i.e. if production is less than demand

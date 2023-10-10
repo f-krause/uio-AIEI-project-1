@@ -22,63 +22,45 @@ class MicrogridEnv(gym.Env):
                 "solar": spaces.Box(0, np.inf, dtype=float),
                 "wind": spaces.Box(0, np.inf, dtype=float),
                 "electricity price": spaces.Box(0, np.inf, dtype=float),
-                "load": spaces.Box(0, np.inf, dtype=float),
+                "energy_demand": spaces.Box(0, np.inf, dtype=float),
                 "battery": spaces.Box(soc_min, soc_max, dtype=float),
             }
         )
         # Initialize your Microgrid
         self.microgrid = Microgrid()
-        self.data_dict = data_dict
         self.step_count = 0
+        self.data_dict = data_dict # hourly environment data
 
     def reset(self, **kwargs):
         self.step_count = 0
         # Reset the Microgrid to its initial state
         self.microgrid = Microgrid()
         # Return the initial observation
-        return self.get_observation(), None # TODO: replace None with environment info
+        return self.get_observation(), None  # TODO: replace None with environment info
 
-    def update_environment(self):
-        current_row = self.data_dict.iloc[self.step_count]
-        self.microgrid.solar_irradiance = current_row["Solar Irradiance"]
-        self.microgrid.wind_speed = current_row["Wind Speed"]
-        self.microgrid.energy_price_utility_grid = current_row["Grid Electricity Price"]
-        # TODO: the load should probably influence the environment
-        #self.microgrid.load = current_row["warehouse 1"] + current_row["small hotel 1"]
-        
     def step(self, action):
-        # Update the Microgrid's state and compute the reward
-        self.update_environment()
-
         # Execute the chosen action on the Microgrid
-        self.microgrid.actions_adjusting_status = Microgrid.get_actions_dict(action["adjusting status"], actions=["s", "w", "g"])
-        self.microgrid.actions_solar = Microgrid.get_actions_dict(action["solar"])
-        self.microgrid.actions_wind = Microgrid.get_actions_dict(action["wind"])
-        self.microgrid.actions_generator = Microgrid.get_actions_dict(action["generator"])
-        self.microgrid.actions_purchased = action["purchased"]
-        self.microgrid.actions_discharged = action["discharged"][0]
-
-        self.microgrid.transition()
+        self.microgrid.transition(action, self.data_dict, self.step_count)
 
         # Calculate the reward based on your cost reduction goal
         reward = self.compute_reward()
 
         # Check if the episode is done (you can define a termination condition here)
         self.step_count += 1
-        done = self.step_count >= len(self.data_dict)  # You need to define when an episode is done
+        max_epochs = len(self.data_dict["wind_speed"]) # this is NOT len(self.data_dict), this would return len(self.data_dict.keys())
+        done = self.step_count >= max_epochs  # You need to define when an episode is done
 
         # Return the next observation, reward, done flag, and any additional info
-        return self.get_observation(), reward, done, {}, None # TODO: decide whether we should return env info instead of None
+        return self.get_observation(), reward, done, {}, None  # TODO: decide whether we should return env info instead of None
 
     def get_observation(self):
-        # Extract relevant information from the Microgrid's state and return it as an observation
+        # Extract relevant information from the Microgrid's state and return it as an observation (environment state)
         observation = [
-            self.microgrid.working_status["s"],
-            self.microgrid.working_status["w"],
-            self.microgrid.working_status["g"],
             self.microgrid.soc,
             self.microgrid.solar_irradiance,
             self.microgrid.wind_speed,
+            self.microgrid.energy_demand,
+            self.microgrid.energy_price_utility_grid
             # Add other relevant variables here
         ]
         return np.array(observation)
