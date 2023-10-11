@@ -1,4 +1,4 @@
-from params import *
+from src.params import *
 
 
 class Microgrid(object):
@@ -9,7 +9,7 @@ class Microgrid(object):
                  soc=0,  # state of charge of the battery system
                  solar_irradiance=0,  # solar irradiance at current decision epoch
                  wind_speed=0,  # wind speed at current decision epoch
-                 energy_price_utility_grid=np.inf,  # rate consumption charge, should come from data
+                 energy_price_utility_grid=0,  # rate consumption charge, should come from data
 
                  # Actions
                  actions_adjusting_status=[0, 0, 0],  # binary: adjusting the working status
@@ -133,7 +133,7 @@ class Microgrid(object):
         if self.energy_load() < self.energy_demand:
             energy_purchased += blackout_cost
 
-        return energy_purchased + self.operational_cost() - self.sell_back_reward()
+        return -(energy_purchased + self.operational_cost() - self.sell_back_reward())
 
     def print_microgrid(self, file=None):
         print("Microgrid working status [solar PV, wind turbine, generator]=", self.working_status, ", SOC =", self.soc,

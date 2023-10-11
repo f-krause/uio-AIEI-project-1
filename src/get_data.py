@@ -5,17 +5,26 @@ import os
 
 # NOTE: We assume here that all time series have the identical starting point and no NAs
 
-def get_energy_demand_data(k=10, region="CA"):
+def get_energy_demand_data(k=25, region="CA"):
+    if isinstance(region, str):
+        region = (region)
+    region = tuple(f"USA_{r}" for r in region)
+
     data_path = "data/residential_load_data_base"
     files = os.listdir(data_path)
-    files_sample = [file for file in files if file.startswith(f"USA_{region}")]
-    if len(files_sample) < k:
-        print("WARNING: Not enough data samples found! Either decrease k or change region")
+
+    files_sample = [file for file in files if file.startswith(region)]
 
     household_demand = []
-    for file in files_sample[:k]:
+    for file in files_sample:
         df = pd.read_csv(data_path + "/" + file)
-        household_demand.append(df['Electricity:Facility [kW](Hourly)'])
+        if df['Electricity:Facility [kW](Hourly)'].shape[0] >= 8640:
+            household_demand.append(df['Electricity:Facility [kW](Hourly)'])
+
+    household_demand = household_demand[:k]
+    if len(household_demand) < k:
+        print(f"WARNING: Found only {len(household_demand)} < {k} households. Either decrease k or change region(s)")
+
     aggr_household_demand = np.array(household_demand).sum(axis=0)
     aggr_household_demand = aggr_household_demand[:-120]  # Drop 5 days bc other data sources lack these days
 

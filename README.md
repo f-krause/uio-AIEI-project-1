@@ -113,3 +113,4 @@ pip install -r requirements.txt
 * **[easygrid:](https://github.com/YannBerthelot/easygrid/tree/main)** a simple version based on [OpenAI gym](https://github.com/openai/gym), maybe we should use this to get started
 * **[example tutorial](https://github.com/Wenuka/RL_for_energy_tutorial)** an example project that is very similar to ours
 * **[gym environments](https://www.gymlibrary.dev//content/environment_creation/#)** tutorial on how to create a RL environment
+* **[stable baselines3](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html)** documentary of stable baselines3
