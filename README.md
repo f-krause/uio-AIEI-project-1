@@ -4,14 +4,15 @@ Mandatory exercise 1 for Artificial Intelligence for Energy Informatics.
 
 [**Assignment**](https://drive.google.com/file/d/1pIJbfPNUTzSqmtWR1NDfasgdQB9se5Tb/view) | Deadline 17.10.2023 kl 23:59
 
+
 ## To-dos
 
-* Look at datasets (ranges, time ranges)
-* Copy and look at given code snippets, maybe run the code
-* How to put everything at easygrid?
-* `train` function
-* How can we create reasonable train/val/test splits?
+* Get training working with reasonable results
+* Add switches to add solar/wind/generator to microgrid
+* Create random agent ("random actions generator")
+* Set up train/val/test splits and appropriate testing OR training over whole data and then evaluation run over whole data
 * (Format dates in csv's to datetime)
+
 
 ## Questions
 
@@ -58,13 +59,25 @@ With venv
 python -m venv venv
 ```
 
-```shell
+In bash:
+```bash
 source venv/bin/activate
 ```
 
+In PowerShell (Windows)
 ```shell
+C:\Code\in5460-mex1\venv\Scripts\Activate.ps1
+```
+
+Add virtual environment to kernel
+```bash
+python -m ipykernel install --user --name=venv
+```
+
+```bash
 pip install -r requirements.txt
 ```
+
 
 ## Scenario
 
