@@ -66,14 +66,6 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Install project to environment, which works both with conda and pip:
-
-```bash
-pip install -e .
-```
-
-This is required to run training with rllib.
-
 ## Scenario
 
 * **State:** energy price on market, current demand, current energy production capacity (solar/wind), current battery charge status
@@ -108,6 +100,3 @@ This is required to run training with rllib.
 * **[easygrid:](https://github.com/YannBerthelot/easygrid/tree/main)** a simple version based on [OpenAI gym](https://github.com/openai/gym), maybe we should use this to get started
 * **[example tutorial](https://github.com/Wenuka/RL_for_energy_tutorial)** an example project that is very similar to ours
 * **[gym environments](https://www.gymlibrary.dev//content/environment_creation/#)** tutorial on how to create a RL environment
-* **[Intro to RLlib](https://medium.com/distributed-computing-with-ray/intro-to-rllib-example-environments-3a113f532c70)**
-    * “PPO” means Proximal Policy Optimization, which is the method we’ll use in RLlib for reinforcement learning. That allows for minibatch updates to optimize the training process. For more details see the [RLlib documentation about PPO](https://docs.ray.io/en/latest/rllib-algorithms.html?highlight=ppo#proximal-policy-optimization-ppo), as well as the original paper [“Proximal Policy Optimization Algorithms” by Schulman, et al.](https://arxiv.org/abs/1707.06347), which describes the benefits of PPO as “a favorable balance between sample complexity, simplicity, and wall-time.”
-    * We shouldn't use MultiDiscrete distributions in our actions space since [they are broken in ray](https://github.com/ray-project/ray/issues/39421).

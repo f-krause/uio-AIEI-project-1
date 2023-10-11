@@ -1,5 +1,5 @@
-from src.get_data import get_data_dict
-from src.microgrid_env import MicrogridEnv
+from get_data import get_data_dict
+from microgrid_env import MicrogridEnv
 
 
 def main():
