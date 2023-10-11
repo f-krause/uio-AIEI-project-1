@@ -69,13 +69,14 @@ In PowerShell (Windows)
 C:\Code\in5460-mex1\venv\Scripts\Activate.ps1
 ```
 
+Install packages in venv
+```bash
+pip install -r requirements.txt
+```
+
 Add virtual environment to kernel
 ```bash
 python -m ipykernel install --user --name=venv
-```
-
-```bash
-pip install -r requirements.txt
 ```
 
 
