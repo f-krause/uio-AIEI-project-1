@@ -6,7 +6,7 @@ class Microgrid(object):
                  # Environment
                  working_status=[0, 0, 0],  # working status of solar PV, wind turbine, generator
                  energy_demand=0,  # energy demand (kWh) for one unit (hour)
-                 soc=0,  # state of charge of the battery system
+                 soc=soc_min,  # state of charge of the battery system
                  solar_irradiance=0,  # solar irradiance at current decision epoch
                  wind_speed=0,  # wind speed at current decision epoch
                  energy_price_utility_grid=0,  # rate consumption charge, should come from data
