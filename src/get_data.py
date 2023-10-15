@@ -52,12 +52,23 @@ def get_environment_data():
     # Read the rate of consumption charge
     data_rate_consumption_charge = pd.read_csv(file_rateConsumptionCharge)
     rate_consumption_charge = np.array(data_rate_consumption_charge["Grid Elecricity Price（$/kWh）"])
+    rate_consumption_charge *= 10  # FIXME increasing energy buying price by factor 10 to make more plausible
     # Rate of consumption charge measured by 10^4 $/ MegaWatt = 10 $/kWh
 
     return solarirradiance, windspeed, rate_consumption_charge
 
+def min_max_scaling(x):
+    x -= x.min()
+    x /= x.ptp()
+    return x
 
-def get_data_dict(k=10, region="CA"):
+def standard_scaling(x):
+    mean = np.mean(x, axis=0)
+    std = np.std(x, axis=0)
+
+    return (x - mean) / std
+
+def get_data_dict(k=10, region="CA", scale=False):
     solar_irradiance, wind_speed, rate_consumption_charge = get_environment_data()
     energy_demand = get_energy_demand_data(k=k, region=region)
 
@@ -67,8 +78,15 @@ def get_data_dict(k=10, region="CA"):
         print("WindSpeed.csv", wind_speed.shape[0])
         print("rate_consumption_charge.csv:", rate_consumption_charge.shape[0])
         raise Exception("Loaded data is of unequal length!")
-
-    return {"energy_demand": energy_demand,
+    
+    data_dict = {"energy_demand": energy_demand,
             "solar_irradiance": solar_irradiance,
             "wind_speed": wind_speed,
             "rate_consumption_charge": rate_consumption_charge}
+    
+    if scale:
+        for key, value in data_dict.items():
+            if key != "rate_consumption_charge":
+                data_dict[key] = standard_scaling(value)
+        
+    return data_dict

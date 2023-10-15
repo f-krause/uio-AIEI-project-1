@@ -9,35 +9,35 @@ cutoff_windspeed = 11 * 3.6
 # the cut-off windspeed (km/h = 1/3.6 m/s), v^co
 rated_windspeed = 7 * 3.6
 # the rated windspeed (km/h = 1/3.6 m/s), v^r
-charging_discharging_efficiency = 0.95
+charging_discharging_efficiency = 0.95  # TODO should this be 0.99?
 # the charging - discharging efficiency, eta
-rate_battery_discharge = 2 / 1000
+# rate_battery_discharge = 2 / 1000  # not used
 # the rate for discharging the battery (MegaWatt), b
-unit_operational_cost_solar = 0.15 / 10
+unit_operational_cost_solar = 0.15 # / 10
 # the unit operational and maintenance cost for generating power
 # from solar PV (10^4 $/MegaWattHour = 10 $/kWHour), r_omc ^s
-unit_operational_cost_wind = 0.085 / 10
+unit_operational_cost_wind = 0.085 # / 10
 # the unit operational and maintenance cost for generating power
 # from wind turbine (10^4 $/MegaWattHour = 10 $/kWHour), r_omc ^w
-unit_operational_cost_generator = 0.55 / 10
+unit_operational_cost_generator = 0.55 # / 10
 # the unit operational and maintenance cost for generating power
 # from generator (10^4 $/MegaWattHour = 10 $/kWHour), r_omc ^g
-unit_operational_cost_battery = 0.95 / 10
+unit_operational_cost_battery = 0.95 # / 10
 # the unit operational and maintenance cost for battery storage system
 # per unit charging / discharging cycle (10^4 $/MegaWattHour = 10 $/kWHour),
 # r_omc ^b
 
 # MANUALLY ADDED
-sell_back_energy_price = 2
-# Price of energy sold to utility grid. According to instructions fixed at  0.2*10^4 $/MWh -> 2 $/kWh
+sell_back_energy_price = 0.2  # FIXME does not make sense if we can buy from grid for 0.06!
+# Price of energy sold to utility grid. According to instructions fixed at  0.2 $/kWh
 
-capacity_battery_storage = 300 / 1000
+capacity_battery_storage = 300  # original: 300 / 1000
 # the capacity of the battery storage system (MegaWatt Hour = 1000 kWHour), e
 soc_max = 0.95 * capacity_battery_storage
 # the maximum state of charge of the battery system
 soc_min = 0.05 * capacity_battery_storage
 # the minimum state of charge of the battery system
-area_solarPV = 1400 / (1000 * 1000)
+area_solarPV = 1400  # original: / (1000 * 1000)
 # the area of the solar PV system (km^2 = 1000*1000 m^2), a
 efficiency_solarPV = 0.2
 # the efficiency of the solar PV system, delta
@@ -58,7 +58,10 @@ gearbox_transmission_efficiency = 0.95
 electrical_generator_efficiency = 0.95
 # calculate the rated power of the wind turbine,
 # electrical generator efficiency, eta_g
-rated_power_wind_turbine_original = 0.5 * density_of_air * np.pi * radius_wind_turbine_blade * radius_wind_turbine_blade * average_wind_speed * average_wind_speed * average_wind_speed * power_coefficient * gearbox_transmission_efficiency * electrical_generator_efficiency
+rated_power_wind_turbine_original = 0.5 * density_of_air * np.pi * radius_wind_turbine_blade * \
+                                    radius_wind_turbine_blade * average_wind_speed * average_wind_speed * \
+                                    average_wind_speed * power_coefficient * gearbox_transmission_efficiency * \
+                                    electrical_generator_efficiency
 rated_power_wind_turbine = rated_power_wind_turbine_original / (3.6 * 3.6 * 3.6)
 # the rated power of the wind turbine, RP_w (MegaWatt = 10^6 W),
 # with the radius_wind_turbine_blade measured in km = 10^3m,
@@ -70,11 +73,16 @@ number_windturbine = 1
 # the number of wind turbine in the onsite generation system, N_w
 number_generators = 1
 # the number of generators, n_g
-rated_output_power_generator = 60 / 1000  # TODO check if this should be 160
-# the rated output power of the generator (MegaWatt = 1000 kW), G_p
+rated_output_power_generator = 600  # original: 60 / 1000 before
+# the rated output power of the generator in kWh, G_p
 
 # MANUALLY ADDED
 delta_t = 1
 # time period in hours
-blackout_cost = 10_000  # TODO needs to be adapted
-# cost of a boackout, i.e. if production is less than demand
+blackout_cost = 100
+# cost of a blackout, i.e. if production is less than demand
+feasibility_cost = 100
+# cost of violating available energy production (i.e. using more energy than we have)
+
+discrete_steps_actions = 11
+# define number of discrete steps, if e.g. 6: energy will be used by 0%, 25%,...,100%
