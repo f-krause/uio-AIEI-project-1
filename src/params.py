@@ -28,7 +28,7 @@ unit_operational_cost_battery = 0.95 # / 10
 # r_omc ^b
 
 # MANUALLY ADDED
-sell_back_energy_price = 0.2  # FIXME does not make sense if we can buy from grid for 0.06!
+sell_back_energy_price = 0.2
 # Price of energy sold to utility grid. According to instructions fixed at  0.2 $/kWh
 
 capacity_battery_storage = 300  # original: 300 / 1000
@@ -81,7 +81,7 @@ delta_t = 1
 # time period in hours
 blackout_cost = 100
 # cost of a blackout, i.e. if production is less than demand
-feasibility_cost = 100
+feasibility_cost = 200
 # cost of violating available energy production (i.e. using more energy than we have)
 
 discrete_steps_actions = 11

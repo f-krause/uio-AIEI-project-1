@@ -62,7 +62,6 @@ class Microgrid(object):
         self.actions_wind = self.get_actions_dict(actions_wind)
         self.actions_generator = self.get_actions_dict(actions_generator)
 
-        # TODO think about order of battery charging/discharging/etc
         self.actions_discharged = action["discharged"][0] / (discrete_steps_actions - 1) * capacity_battery_storage
         if self.soc - self.actions_discharged < soc_min:
             self.actions_discharged = self.soc - soc_min
@@ -82,7 +81,6 @@ class Microgrid(object):
         self.wind_speed = data_dict["wind_speed"][step_count]
         self.energy_price_utility_grid = data_dict["rate_consumption_charge"][step_count]
 
-        # TODO think about order of battery charging/discharging/etc
         energy_for_battery = self.actions_solar["battery"] + self.actions_wind["battery"] + \
                              self.actions_generator["battery"]
         self.soc = self.soc + energy_for_battery * charging_discharging_efficiency
@@ -100,7 +98,6 @@ class Microgrid(object):
             self.energy_for_load_bought = self.energy_demand - self.energy_total
             self.energy_total = self.energy_total + self.energy_for_load_bought
 
-        # TODO think about order of battery charging/discharging/etc
         energy_from_battery = self.actions_discharged / charging_discharging_efficiency
         self.soc -= energy_from_battery
 

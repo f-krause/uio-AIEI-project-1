@@ -1,6 +1,5 @@
 import gym
 from gym import spaces
-import pandas as pd
 
 from src.params import *
 from src.microgrid import Microgrid
