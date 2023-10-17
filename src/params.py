@@ -9,7 +9,7 @@ cutoff_windspeed = 11 * 3.6
 # the cut-off windspeed (km/h = 1/3.6 m/s), v^co
 rated_windspeed = 7 * 3.6
 # the rated windspeed (km/h = 1/3.6 m/s), v^r
-charging_discharging_efficiency = 0.95  # TODO should this be 0.99?
+charging_discharging_efficiency = 0.95
 # the charging - discharging efficiency, eta
 # rate_battery_discharge = 2 / 1000  # not used
 # the rate for discharging the battery (MegaWatt), b
@@ -79,10 +79,5 @@ rated_output_power_generator = 600  # original: 60 / 1000 before
 # MANUALLY ADDED
 delta_t = 1
 # time period in hours
-blackout_cost = 100
+blackout_cost = 300
 # cost of a blackout, i.e. if production is less than demand
-feasibility_cost = 200
-# cost of violating available energy production (i.e. using more energy than we have)
-
-discrete_steps_actions = 11
-# define number of discrete steps, if e.g. 6: energy will be used by 0%, 25%,...,100%

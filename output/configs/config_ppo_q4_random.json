@@ -1,0 +1,21 @@
+{
+    "nr_households": 100,
+    "region": [
+        "CA",
+        "AZ",
+        "QR",
+        "NV",
+        "NM",
+        "TX",
+        "FL",
+        "LA",
+        "IA"
+    ],
+    "wind": false,
+    "wind_generator": true,
+    "alternative_cost": true,
+    "random": true,
+    "save_name": "ppo_q4",
+    "total_timesteps": 1000,
+    "ent_coef": 1
+}

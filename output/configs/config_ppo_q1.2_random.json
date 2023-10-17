@@ -1,0 +1,11 @@
+{
+    "nr_households": 100,
+    "region": "CA",
+    "wind": false,
+    "wind_generator": false,
+    "alternative_cost": false,
+    "random": true,
+    "save_name": "ppo_q1.2",
+    "total_timesteps": 1000,
+    "ent_coef": 1
+}
